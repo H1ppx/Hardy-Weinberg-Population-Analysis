@@ -17,7 +17,6 @@ public class HWE extends Application {
     static ArrayList<Integer>populationAmounts = new ArrayList<>();
     static ArrayList<XYChart.Series>series = new ArrayList<>();
 
-
     public static String generateZygote(double p, int amountOfZygotes) {
         String zygotes = "";
         for (int i = 1; i <= amountOfZygotes; i++) {
