@@ -54,10 +54,9 @@ public class GSheets {
     }
 
     public static Credential authorize() throws IOException {
-        // Load client secrets.
-//        InputStream in = Quickstart.class.getResourceAsStream("/client_secret.json");
         InputStream in    = new FileInputStream(
-                "C:\\Users\\willc\\Documents\\Hardy-Weinberg-Population-Analysis\\client_secret.json");
+                System.getProperty("user.dir")+"\\client_secret.json");
+
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
