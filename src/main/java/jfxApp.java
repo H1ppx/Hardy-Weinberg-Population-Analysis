@@ -54,40 +54,38 @@ public class jfxApp extends Application {
     }
 
     @Override public void start(Stage stage) {
-        stage.setTitle("HWE EQ");
-        final NumberAxis xAxis = new NumberAxis();
-        final NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("Generations");
-        yAxis.setLabel("Frequency of P");
-        //creating the chart
-        final LineChart<Number,Number> lineChart =
-                new LineChart<Number,Number>(xAxis,yAxis);
-
-        lineChart.setTitle("Changes in p values across " + genAmount + " generations with different population sizes");
-
-        for (int i = 0; i < amountOfPopulations; i++){
-            series.get(i).setName("Population:" + populationAmounts.get(i));
-
-            ArrayList<Double> pVals = getP(startP, genAmount, populationAmounts.get(i));
-            System.out.println(pVals);
-            for (int j = 0; j<=pVals.size()-1; j++){
-                double currentP = pVals.get(j);
-                series.get(i).getData().add(new XYChart.Data(j, currentP));
-            }
-        }
-
-
-
-        Scene scene  = new Scene(lineChart,800,600);
-
-        for (int i = 0; i < amountOfPopulations; i++){
-            lineChart.getData().add(series.get(i));
-        }
-
-        lineChart.setCreateSymbols(false);
-
-        stage.setScene(scene);
-        stage.show();
+//        stage.setTitle("HWE EQ");
+//        final NumberAxis xAxis = new NumberAxis();
+//        final NumberAxis yAxis = new NumberAxis();
+//        xAxis.setLabel("Generations");
+//        yAxis.setLabel("Frequency of P");
+//        //creating the chart
+//        final LineChart<Number,Number> lineChart =
+//                new LineChart<Number,Number>(xAxis,yAxis);
+//
+//        lineChart.setTitle("Changes in p values across " + genAmount + " generations with different population sizes");
+//
+//        for (int i = 0; i < amountOfPopulations; i++){
+//            series.get(i).setName("Population:" + populationAmounts.get(i));
+//
+//            ArrayList<Double> pVals = getP(startP, genAmount, populationAmounts.get(i));
+//            System.out.println(pVals);
+//            for (int j = 0; j<=pVals.size()-1; j++){
+//                double currentP = pVals.get(j);
+//                series.get(i).getData().add(new XYChart.Data(j, currentP));
+//            }
+//        }
+//
+//        Scene scene  = new Scene(lineChart,800,600);
+//
+//        for (int i = 0; i < amountOfPopulations; i++){
+//            lineChart.getData().add(series.get(i));
+//        }
+//
+//        lineChart.setCreateSymbols(false);
+//
+//        stage.setScene(scene);
+//        stage.show();
     }
 
     public static void main(String[] args) {
