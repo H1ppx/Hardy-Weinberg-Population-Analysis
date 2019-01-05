@@ -94,12 +94,24 @@ public class HWE2 extends Application {
                 CSVWriter.DEFAULT_ESCAPE_CHARACTER,
                 CSVWriter.DEFAULT_LINE_END);
 
-        String[] headerRecord = new String[amountOfPopulations];
+        String[] headerRecord = new String[amountOfPopulations+1];
+        headerRecord[0] = "Gen Count";
         for (int i = 0; i < amountOfPopulations; i++){
             headerRecord[i] = "Population:" + populationSizes.get(i);
             System.out.println(headerRecord[i]);
         }
         csvWriter.writeNext(headerRecord);
+        csvWriter.flush();
+
+        for (int i = 0; i < amountOfPopulations; i++){
+
+            ArrayList<Double> pVals = getP(startP, populationSizes.get(i), genAmount);
+            for (int j = 0; j<=pVals.size()-1; j++){
+                double currentP = pVals.get(j);
+                series.get(i).getData().add(new XYChart.Data(j, currentP));
+            }
+        }
+
     }
 
     private static double getNextP(double curretP, int populationSize) {
