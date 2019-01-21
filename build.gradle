@@ -1,12 +1,17 @@
 group 'willChu'
 version '0.1'
 
-apply plugin: 'java'
-
-sourceCompatibility = 1.8
+plugins {
+    id 'org.openjfx.javafxplugin' version '0.0.6'
+    id 'java'
+}
 
 repositories {
     mavenCentral()
+}
+
+javafx {
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
 dependencies {

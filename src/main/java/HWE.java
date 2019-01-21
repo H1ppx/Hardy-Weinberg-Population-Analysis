@@ -1,3 +1,4 @@
+import com.opencsv.CSVWriter;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -15,9 +16,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -56,6 +57,7 @@ public class HWE extends Application {
         Button add1 = new Button("Add");
         Button add2 = new Button("Add");
         Button add3 = new Button("Add");
+        Button export = new Button("Export Data");
 
         Circle confirm1 = new Circle(15, Color.RED);
         Circle confirm2 = new Circle(15, Color.RED);
@@ -63,12 +65,15 @@ public class HWE extends Application {
         HBox hboxP = new HBox();
         HBox hboxGen = new HBox();
         HBox hboxPop = new HBox();
+        HBox hBoxExport = new HBox();
 
         VBox vbox = new VBox();
 
         hboxP.getChildren().addAll(pLabel, pTextfield, add1, confirm1);
         hboxGen.getChildren().addAll(genLabel, genTextField, add2, confirm2);
         hboxPop.getChildren().addAll(popLabel, popTextField, add3);
+        hBoxExport.getChildren().addAll(export);
+
 
         hboxP.setSpacing(10);
         hboxP.setPadding(new Insets(10, 5, 10, 5));
@@ -79,7 +84,10 @@ public class HWE extends Application {
         hboxPop.setSpacing(10);
         hboxPop.setPadding(new Insets(10, 5, 10, 5));
 
-        vbox.getChildren().addAll(lineChart, hboxP, hboxGen, hboxPop);
+        hBoxExport.setSpacing(10);
+        hBoxExport.setPadding(new Insets(10, 5, 10, 5));
+
+        vbox.getChildren().addAll(lineChart, hboxP, hboxGen, hboxPop, hBoxExport);
 
         add1.setOnAction(event -> {
             pVal = Double.parseDouble(pTextfield.getText());
@@ -103,7 +111,7 @@ public class HWE extends Application {
 
             XYChart.Series tempSeries = new XYChart.Series();
             tempSeries.setName("Population:" + popSize);
-            ArrayList<Double> tempfile
+            ArrayList<Double> tempfile;
 
 
             ArrayList<Double> pVals = getP(pVal, popSize, genAmount);
@@ -114,6 +122,43 @@ public class HWE extends Application {
 
             lineChart.getData().add(tempSeries);
 
+        });
+
+        export.setOnAction(event -> {
+            Writer writer = null;
+            try {
+                writer = Files.newBufferedWriter(Paths.get("./test.csv"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            CSVWriter csvWriter = new CSVWriter(writer,
+                    CSVWriter.DEFAULT_SEPARATOR,
+                    CSVWriter.NO_QUOTE_CHARACTER,
+                    CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                    CSVWriter.DEFAULT_LINE_END);
+            
+            String[] headerRecord = new String[lineChart.getData().size()+1];
+            headerRecord[0] = "Gen Count";
+            for (int i = 1; i < lineChart.getData().size()+1; i++){
+                headerRecord[i] = lineChart.getData().get(i-1).getName();
+                System.out.println(headerRecord[i]);
+            }
+            csvWriter.writeNext(headerRecord);
+
+            for(int i=0; i < lineChart.getData().get(0).getData().size(); i++){
+                String[] tempRecord = new String[lineChart.getData().size()+1];
+                tempRecord[0] = Integer.toString(i);
+                for(int j=1; j < lineChart.getData().size()+1; j++){
+                    tempRecord[j] = Double.toString((Double) lineChart.getData().get(j-1).getData().get(i).getYValue());
+                }
+                csvWriter.writeNext(tempRecord);
+            }
+
+            try {
+                csvWriter.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
 
         ((Group)scene.getRoot()).getChildren().add(vbox);
