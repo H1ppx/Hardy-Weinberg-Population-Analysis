@@ -1,8 +1,6 @@
 import com.opencsv.CSVWriter;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
@@ -10,7 +8,6 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -41,23 +38,25 @@ public class HWE extends Application {
         lineChart.setTitle("P Value vs Generation vs Population Size");
         lineChart.setCreateSymbols(false);
 
-        ArrayList<ArrayList> csvData = new ArrayList<>();
-
         Scene scene  = new Scene(new Group());
 
         Label pLabel = new Label("Start P:");
         TextField pTextfield = new TextField();
+        pTextfield.setPromptText("Between 0 and 1 Only");
 
         Label genLabel = new Label("Generations:");
         TextField genTextField = new TextField();
+        genTextField.setPromptText("Integer Only");
 
         Label popLabel = new Label("Population Size:");
         TextField popTextField = new TextField();
+        popTextField.setPromptText("Integer Only");
 
         Button add1 = new Button("Add");
         Button add2 = new Button("Add");
         Button add3 = new Button("Add");
         Button export = new Button("Export Data");
+        Button reset = new Button("Reset All");
 
         Circle confirm1 = new Circle(15, Color.RED);
         Circle confirm2 = new Circle(15, Color.RED);
@@ -72,7 +71,7 @@ public class HWE extends Application {
         hboxP.getChildren().addAll(pLabel, pTextfield, add1, confirm1);
         hboxGen.getChildren().addAll(genLabel, genTextField, add2, confirm2);
         hboxPop.getChildren().addAll(popLabel, popTextField, add3);
-        hBoxExport.getChildren().addAll(export);
+        hBoxExport.getChildren().addAll(export, reset);
 
 
         hboxP.setSpacing(10);
@@ -111,8 +110,6 @@ public class HWE extends Application {
 
             XYChart.Series tempSeries = new XYChart.Series();
             tempSeries.setName("Population:" + popSize);
-            ArrayList<Double> tempfile;
-
 
             ArrayList<Double> pVals = getP(pVal, popSize, genAmount);
             for (double i = 0; i<=pVals.size()-1; i++){
@@ -127,7 +124,7 @@ public class HWE extends Application {
         export.setOnAction(event -> {
             Writer writer = null;
             try {
-                writer = Files.newBufferedWriter(Paths.get("./test.csv"));
+                writer = Files.newBufferedWriter(Paths.get("./data.csv"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -136,7 +133,7 @@ public class HWE extends Application {
                     CSVWriter.NO_QUOTE_CHARACTER,
                     CSVWriter.DEFAULT_ESCAPE_CHARACTER,
                     CSVWriter.DEFAULT_LINE_END);
-            
+
             String[] headerRecord = new String[lineChart.getData().size()+1];
             headerRecord[0] = "Gen Count";
             for (int i = 1; i < lineChart.getData().size()+1; i++){
@@ -159,6 +156,21 @@ public class HWE extends Application {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        });
+
+        reset.setOnAction(event -> {
+            pTextfield.setEditable(true);
+            pTextfield.clear();
+            confirm1.setFill(Color.RED);
+            hboxP.getChildren().add(2, add1);
+
+            genTextField.setEditable(true);
+            genTextField.clear();
+            confirm2.setFill(Color.RED);
+            hboxGen.getChildren().add(2, add2);
+
+            lineChart.getData().clear();
+
         });
 
         ((Group)scene.getRoot()).getChildren().add(vbox);
@@ -185,7 +197,6 @@ public class HWE extends Application {
             pVals.add(p);
             p = getNextP(p, populationSize);
         }
-
         return pVals;
     }
 
