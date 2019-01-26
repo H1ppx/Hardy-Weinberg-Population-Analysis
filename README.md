@@ -21,10 +21,10 @@ I had a project in AP Biology to create a model of the Hardy-Weinberg Equilibriu
 ## Installation
 Provide step by step series of examples and explanations about how to get a development env running.
 
-## How to use?
+## How to use
 Input starting with the initial P value and amount of generations to simulate. Afterwords just add the population sizes and watch the sample graph adapt to your new data. When you are ready, click the export button and import the csv to excel or google sheets for further analysis.
 
-## [License]
+## License
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
